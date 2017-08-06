@@ -32,7 +32,8 @@ var bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 var index = require('../routes/index.js')
-app.use('/api/user', index)  
+app.use('/api/user', index)
+
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {

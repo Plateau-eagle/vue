@@ -22,24 +22,29 @@
 									<div class="panel-body">
 										<form role="form">
 											<div class="form-group">
-												<label for="name">公司名称</label>
-												<input class="form-control" id="name" placeholder="请输入公司名称" v-model="name">
+												<label for="name">公司名称:</label>
+												<input class="form-control" v-verify="name" id="name" placeholder="请输入公司名称" v-model="name">
+												<p v-remind="name"></p>
 											</div>
 											<div class="form-group">
-												<label for="linkman">联系人</label>
-												<input class="form-control" id="linkman" placeholder="请输入联系人" v-model="linkman">
+												<label for="linkman">联&nbsp;系&nbsp;人:</label>
+												<input class="form-control" v-verify="linkman" id="linkman" placeholder="请输入联系人" v-model="linkman">
+												<p v-remind="linkman"></p>
 											</div>
 											<div class="form-group">
-												<label for="email">邮箱</label>
-												<input class="form-control" id="email" placeholder="请输入邮箱" v-model="email">
+												<label for="exampleInputEmail1">邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱:</label>
+												<input class="form-control" v-verify="email" id="exampleInputEmail1" placeholder="请输入邮箱" v-model="email">
+												<p v-remind="email"></p>
 											</div>
 											<div class="form-group">
-												<label for="web">公司网址</label>
+												<label for="web">公司网址:</label>
 												<input class="form-control" id="web" placeholder="请输入公司网址" v-model="web">
+												<p></p>
 											</div>
 											<div class="form-group">
-												<label for="phone">联系电话</label>
-												<input class="form-control" id="phone" placeholder="请输入联系电话" v-model="phone">
+												<label for="phone">联系电话:</label>
+												<input class="form-control" id="phone" v-verify="phone" placeholder="请输入联系电话" v-model="phone">
+												<p v-remind="phone"></p>
 											</div>
 										</form>
 									</div>
@@ -62,7 +67,6 @@
 </template>
 <script>
 	import axios from 'axios'
-
 	export default {
 		props: {
 			show: { // 控制 Modal 是否显示				　　　　
@@ -159,7 +163,7 @@
 					this.cancel();
 				}
 			},
-			getcurInfo(){
+			getcurInfo() {
 				console.log(this.updateId);
 				axios({
 						url: '/api/user/curInfo',
@@ -177,11 +181,11 @@
 					})
 					.then((res) => {
 						if(res.status == 200) {
-							this.name=res.data[0].name;
-							this.linkman=res.data[0].linkman;
-							this.email=res.data[0].email;
-							this.web=res.data[0].web;
-							this.phone=res.data[0].phone;
+							this.name = res.data[0].name;
+							this.linkman = res.data[0].linkman;
+							this.email = res.data[0].email;
+							this.web = res.data[0].web;
+							this.phone = res.data[0].phone;
 						}
 					})
 					.catch((err) => {
@@ -190,42 +194,55 @@
 			},
 			updateInfo() {
 				//console.log(this.updateId);
-					axios({
-							url: '/api/user/update',
-							method: 'post',
-							data: {
-								cusId: this.updateId,
-								cusName: this.name,
-								cusLinkman: this.linkman,
-								cusEmail: this.email,
-								cusWeb: this.web,
-								cusPhone: this.phone
-							},
-							transformRequest: [function(data) {
-								let ret = '';
-								for(let it in data) {
-									ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-								}
-								return ret;
-							}]
-						})
-						.then((res) => {
-							if(res.status == 200) {
-								alert('提交成功！');
-								this.cancel();
-								this.$emit('resh');
+				if(this.$verify.check()) {
+				axios({
+						url: '/api/user/update',
+						method: 'post',
+						data: {
+							cusId: this.updateId,
+							cusName: this.name,
+							cusLinkman: this.linkman,
+							cusEmail: this.email,
+							cusWeb: this.web,
+							cusPhone: this.phone
+						},
+						transformRequest: [function(data) {
+							let ret = '';
+							for(let it in data) {
+								ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
 							}
-						})
-						.catch((err) => {
-							console.log(err);
-						});
+							return ret;
+						}]
+					})
+					.then((res) => {
+						if(res.status == 200) {
+							alert('提交成功！');
+							this.cancel();
+							this.$emit('resh');
+						}
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+				}
 			}
+		},
+		verify: {
+			name: "required",
+			linkman: "required",
+			email: ["required","email"],
+			phone: "phone"
 		}
 	}
 </script>
-<style scoped>
+<style scoped lang="less">
 	.modal {
 		display: block;
+		.modal-body{
+			p{
+				color: red;
+			}
+		}
 	}
 	
 	.modal-transition {
