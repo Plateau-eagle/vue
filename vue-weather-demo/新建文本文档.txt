@@ -1,0 +1,2 @@
+https://api.seniverse.com/v3/weather/now.json?location=beijing&ts=1443079775&ttl=30&uid=[U17DC24A91]&sig=[9bo5zcpq0gjtxb71]&callback=showWeather；
+和风天气key:37375519876e4e61b656df30fb8979c0  
